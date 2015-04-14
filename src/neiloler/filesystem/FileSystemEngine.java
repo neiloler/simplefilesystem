@@ -2,6 +2,8 @@ package neiloler.filesystem;
 
 import java.util.Scanner;
 
+import neiloler.filesystem.FileSystemController.OpResult;
+
 public class FileSystemEngine {
 
 	public static void main(String[] args) {
@@ -15,28 +17,49 @@ public class FileSystemEngine {
 			System.out.print("Command: ");
 			
 			String[] command = input.nextLine().split(" ");
-			
-			for (String piece : command) {
-				System.out.println(piece);
-			}
-			
-			
-			// TODO Parse out commands into string[], like args[]
-			// look at the first command of each arg
-				// if unknown, respond with error
-			
-			OpResult result;
+						
+			OpResult result = OpResult.UNKNOWN_COMMNAND;
 			
 			// Parse command
+			if (command[0].equals("-h") || command[0].equals("help")) {
+				controller.showHelp();
+			}
 			if (command[0].equals("exit")) {
 				runEngine = false;
 			}
 			else if (command[0].equals("create")) {
-				System.out.println("RESULT: " + controller.create(command));
+				result = controller.create(command);
 			}
 			
 			// Handle result
-			if
+			switch (result) {
+			
+				// FAILURES
+				case FAILURE_PATH_NOT_FOUND:
+					System.out.println("Path not found!");
+					break;
+				case FAILURE_PATH_ALREADY_EXISTS:
+					System.out.println("Path already exists!");
+					break;
+				case FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION:
+					System.out.println("Illegal operation!");
+					break;
+				case FAILURE_NOT_A_TEXTFILE:
+					System.out.println("Illegal operation!");
+					break;
+				
+				// SUCCESS
+				case SUCCESS:
+					// TODO Do we need this here?
+					break;
+				
+				// MISC
+				case UNKNOWN_COMMNAND:
+					break;
+				case BAD_COMMAND:
+					System.out.println("Incorrect use of command. Try using '-h' or 'help' to learn about commands.");
+					break;
+			}
 		}
 		
 		input.close();
