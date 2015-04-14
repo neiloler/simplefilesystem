@@ -3,11 +3,11 @@ package neiloler.filesystem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Drive extends SimpleFile {
+public class FileContainer extends SimpleFile {
 
 	private List<SimpleFile> _files;
 	
-	public Drive(FileType fileType, String fileName, String filePath) {
+	public FileContainer(FileType fileType, String fileName, String filePath) {
 		_files = new ArrayList<>();
 		
 		_fileType = fileType;
