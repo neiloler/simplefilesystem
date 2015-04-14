@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import neiloler.filesystem.SimpleFile.FileType;
+
 public class FileSystemController {
 	
 	List<FileContainer> _drives;
@@ -15,7 +17,7 @@ public class FileSystemController {
 			"create [type] [name] [path]\n" +
 			"\t type: drive, folder, zip, or text\n" +
 			"\t name: name of file\n" +
-			"\t path: path, delineated by \\ characters\n\n"
+			"\t path: path, delineated by \\ characters (path should not exist if making new drive)\n\n"
 			);
 	
 	public FileSystemController() {
@@ -45,9 +47,18 @@ public class FileSystemController {
 			RESULT = OpResult.BAD_COMMAND;
 		}
 		else {
-			// TODO Do we need to protect against things like "//" (this will make a path level of "")
-			
+			FileType fileType;
+			String fileName = command[2];
 			List<String> path;
+			
+			// Get type
+			if (command[1].equals("drive")) fileType = FileType.Drive;
+			else if (command[1].equals("folder")) fileType = FileType.Folder;
+			else if (command[1].equals("text")) fileType = FileType.TextFile;
+			else if (command[1].equals("zip")) fileType = FileType.ZipFile;
+			else return OpResult.UNKNOWN_COMMNAND;
+			
+			// TODO Do we need to protect against things like "//" (this will make a path level of "")
 			if (command.length == 3) {
 				path = new ArrayList<>();
 				path.add("");
@@ -58,9 +69,7 @@ public class FileSystemController {
 				path.addAll(Arrays.asList(pathArray));
 			}
 			
-			for (String string : path) {
-				System.out.println(string);
-			}
+			
 			
 		}
 		
