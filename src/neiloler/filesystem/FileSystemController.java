@@ -1,7 +1,10 @@
 package neiloler.filesystem;
 
+import java.util.List;
+
 public class FileSystemController {
 	
+	// SETUP HELPER
 	StringBuilder helpDisplay = new StringBuilder(
 			"SimpleFileSystem Help\n" +
 			"------------------------------------------------\n" +
@@ -10,6 +13,8 @@ public class FileSystemController {
 			"\t name: name of file\n" +
 			"\t path: path, delineated by \\ characters\n\n"
 			);
+	
+	
 	
 	public enum OpResult {
 		FAILURE_PATH_NOT_FOUND,
@@ -27,11 +32,15 @@ public class FileSystemController {
 	
 	public OpResult create(String[] command) {
 		
-		// Handle commands that don't fit our criteria
+		OpResult RESULT = OpResult.UNKNOWN_COMMNAND;
+		
 		if (command.length != 2 && command.length != 3) {
-			return OpResult.BAD_COMMAND;
+			RESULT = OpResult.BAD_COMMAND;
+		}
+		else {
+			
 		}
 		
-		return OpResult.UNKNOWN_COMMNAND;
+		return RESULT;
 	}
 }
