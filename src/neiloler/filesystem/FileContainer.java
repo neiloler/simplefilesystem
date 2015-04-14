@@ -23,7 +23,12 @@ public class FileContainer extends SimpleFile {
 			total += simpleFile.getSize();
 		}
 		
-		return total;
+		if (_fileType == FileType.ZipFile) {
+			return total / 2;
+		}
+		else {
+			return total;
+		}
 	}
 
 	@Override
