@@ -1,6 +1,7 @@
 package neiloler.filesystem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileSystemController {
@@ -9,7 +10,7 @@ public class FileSystemController {
 	
 	// SETUP HELPER
 	StringBuilder helpDisplay = new StringBuilder(
-			"SimpleFileSystem Help\n" +
+			"\n\nSimpleFileSystem Help\n" +
 			"------------------------------------------------\n" +
 			"create [type] [name] [path]\n" +
 			"\t type: drive, folder, zip, or text\n" +
@@ -36,13 +37,30 @@ public class FileSystemController {
 	}
 	
 	public OpResult create(String[] command) {
+		// create [type] [name] [path]
 		
 		OpResult RESULT = OpResult.UNKNOWN_COMMNAND;
 		
-		if (command.length != 2 && command.length != 3) {
+		if (command.length != 3 && command.length != 4) {
 			RESULT = OpResult.BAD_COMMAND;
 		}
 		else {
+			// TODO Do we need to protect against things like "//" (this will make a path level of "")
+			
+			List<String> path;
+			if (command.length == 3) {
+				path = new ArrayList<>();
+				path.add("");
+			}
+			else {
+				path = new ArrayList<>();
+				String[] pathArray = command[3].split("/");
+				path.addAll(Arrays.asList(pathArray));
+			}
+			
+			for (String string : path) {
+				System.out.println(string);
+			}
 			
 		}
 		
