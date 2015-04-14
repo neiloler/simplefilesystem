@@ -1,8 +1,11 @@
 package neiloler.filesystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileSystemController {
+	
+	List<FileContainer> _drives;
 	
 	// SETUP HELPER
 	StringBuilder helpDisplay = new StringBuilder(
@@ -14,7 +17,9 @@ public class FileSystemController {
 			"\t path: path, delineated by \\ characters\n\n"
 			);
 	
-	
+	public FileSystemController() {
+		_drives = new ArrayList<>();
+	}
 	
 	public enum OpResult {
 		FAILURE_PATH_NOT_FOUND,
