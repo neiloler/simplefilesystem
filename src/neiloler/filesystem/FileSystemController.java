@@ -16,8 +16,8 @@ public class FileSystemController {
 			"------------------------------------------------\n" +
 			"create [type] [name] [path]\n" +
 			"\t type: drive, folder, zip, or text\n" +
-			"\t name: name of file\n" +
-			"\t path: path, delineated by \\ characters (path should not exist if making new drive)\n\n"
+			"\t name: name of file (name cannot contain '/' characters)\n" +
+			"\t path: path, delineated by / characters (path should not exist if making new drive)\n\n"
 			);
 	
 	public FileSystemController() {
@@ -48,16 +48,25 @@ public class FileSystemController {
 		}
 		else {
 			FileType fileType;
-			String fileName = command[2];
+			String fileName;
 			List<String> path;
 			
-			// Get type
+			// Get TYPE
 			if (command[1].equals("drive")) fileType = FileType.Drive;
 			else if (command[1].equals("folder")) fileType = FileType.Folder;
 			else if (command[1].equals("text")) fileType = FileType.TextFile;
 			else if (command[1].equals("zip")) fileType = FileType.ZipFile;
 			else return OpResult.UNKNOWN_COMMNAND;
 			
+			// Get NAME
+			if (command[2].contains("/")) {
+				return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
+			}
+			else {
+				fileName = command[2];
+			}
+			
+			// Get PATH
 			// TODO Do we need to protect against things like "//" (this will make a path level of "")
 			if (command.length == 3) {
 				path = new ArrayList<>();
