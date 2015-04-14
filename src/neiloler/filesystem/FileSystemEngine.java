@@ -42,7 +42,7 @@ public class FileSystemEngine {
 					System.out.println("Path already exists!");
 					break;
 				case FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION:
-					System.out.println("Illegal operation!");
+					System.out.println("Illegal operation! Please see help for desired method.");
 					break;
 				case FAILURE_NOT_A_TEXTFILE:
 					System.out.println("Illegal operation!");
