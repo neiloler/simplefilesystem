@@ -9,9 +9,9 @@ public abstract class SimpleFile {
 		ZipFile
 	};
 	
-	private FileType _fileType;
-	private String _fileName;
-	private String _filePath;
+	protected FileType _fileType;
+	protected String _fileName;
+	protected String _filePath;
 	
 	public FileType getType() {
 		return _fileType;
