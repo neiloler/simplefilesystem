@@ -44,7 +44,7 @@ public class FileSystemController {
 		OpResult RESULT = OpResult.UNKNOWN_COMMNAND;
 		
 		if (command.length != 3 && command.length != 4) {
-			RESULT = OpResult.BAD_COMMAND;
+			return OpResult.BAD_COMMAND;
 		}
 		else {
 			FileType fileType;
