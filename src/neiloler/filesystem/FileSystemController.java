@@ -176,7 +176,11 @@ public class FileSystemController {
 		return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
 	}
 
-	
+	/**
+	 * Print current location's contents to the console.
+	 * 
+	 * @return Success, for now
+	 */
 	public OpResult showCurrentLocationContents() {
 		String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
 		for (String itemName : contents) {
@@ -184,7 +188,12 @@ public class FileSystemController {
 		}
 		return OpResult.SUCCESS;
 	}
-
+	
+	/**
+	 * Print current location's path to the console.
+	 * 
+	 * @return Success, for now
+	 */
 	public OpResult showCurrentLocationPath() {
 		System.out.println(_currentLocation.getPath());
 		return OpResult.SUCCESS;
