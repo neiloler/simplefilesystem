@@ -16,9 +16,8 @@ public class TextFile extends SimpleFile {
 		return _contents.length();
 	}
 
-	@Override
-	<T> T getContents() {
-		return (T) _contents;
+	public String getContents() {
+		return _contents;
 	}
 	
 	public void writeToFile(String newContents) {
