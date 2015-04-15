@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import neiloler.filesystem.FileSystemController.OpResult;
 import neiloler.filesystem.SimpleFile.FileType;
 
 public class FileSystemController {
@@ -173,5 +174,19 @@ public class FileSystemController {
 		}
 		
 		return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
+	}
+
+	
+	public OpResult showCurrentLocationContents() {
+		String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
+		for (String itemName : contents) {
+			System.out.println(itemName);
+		}
+		return OpResult.SUCCESS;
+	}
+
+	public OpResult showCurrentLocationPath() {
+		System.out.println(_currentLocation.getPath());
+		return OpResult.SUCCESS;
 	}
 }

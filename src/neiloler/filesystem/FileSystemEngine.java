@@ -30,6 +30,12 @@ public class FileSystemEngine {
 			else if (command[0].equals("create")) {
 				result = controller.create(command);
 			}
+			else if (command[0].equals("ls") || command[0].equals("dir")) {
+				result = controller.showCurrentLocationContents();
+			}
+			else if (command[0].equals("pwd")) {
+				result = controller.showCurrentLocationPath();
+			}
 			
 			// Handle result
 			switch (result) {
