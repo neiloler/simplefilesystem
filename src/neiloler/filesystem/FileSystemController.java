@@ -204,6 +204,13 @@ public class FileSystemController {
 		return OpResult.SUCCESS;
 	}
 
+	/**
+	 * Changes current path to the desired path.
+	 * 
+	 * @param command Raw command from engine.
+	 * @return
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
 	public OpResult changeLocation(String[] command) {
 		
 		return null;
