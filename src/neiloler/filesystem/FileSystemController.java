@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.function.BiConsumer;
 
 import neiloler.filesystem.SimpleFile.FileType;
 
@@ -106,7 +107,6 @@ public class FileSystemController {
 			if (command.length == 3) {
 				// No path, should make in current path ('./')
 				pathTokens = new ArrayList<>();
-				pathTokens.add("");
 				path = "";
 			}
 			else {
@@ -157,10 +157,17 @@ public class FileSystemController {
 			return OpResult.SUCCESS;
 		}
 		else {
-			String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
-			for (String itemName : contents) {
-				System.out.println(itemName);
-			}
+			Map<String, SimpleFile> contents = _currentLocation.getContents();
+			contents.forEach(new BiConsumer<String, SimpleFile>() {
+
+				@Override
+				public void accept(String t, SimpleFile u) {
+//					System.out.println(t + "\t\t\ttype: " + u.getType() + "\t\t\tsize: " + u.getSize());
+					System.out.format("%-15s%-15s%-15s\n", t, u.getType().toString(), Double.toString(u.getSize()));
+				}
+				
+			});
+			
 			return OpResult.SUCCESS;
 		}
 	}
@@ -209,7 +216,7 @@ public class FileSystemController {
 	 * 
 	 * @param fileToCreate File to insert in target location.
 	 * @param node The starting folder to place the path and file in.
-	 * @param path The path to put the target folder in, given node at first.
+	 * @param path The path to put the target folder in, this shouldn't contain the node's path token.
 	 * @return Operation result status.
 	 */
 	private OpResult createFileAtPath(SimpleFile fileToCreate, FileContainer node, Queue<String> path) {
