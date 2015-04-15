@@ -198,4 +198,9 @@ public class FileSystemController {
 		System.out.println(_currentLocation.getPath());
 		return OpResult.SUCCESS;
 	}
+
+	public OpResult changeLocation(String[] command) {
+		
+		return null;
+	}
 }
