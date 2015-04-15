@@ -12,8 +12,11 @@ import neiloler.filesystem.SimpleFile.FileType;
 
 public class FileSystemController {
 	
+	// TODO We could let the user set this up the first time the program is run/ prompt it for the first command
+	private final String DEFAULT_DRIVE_NAME = "moto";
+	
 	private Map<String, FileContainer> _drives;
-	private FileContainer _currentDrive;
+	private FileContainer _currentLocation;
 	
 	// SETUP HELPER
 	StringBuilder helpDisplay = new StringBuilder(
@@ -30,8 +33,8 @@ public class FileSystemController {
 		
 		// Add a default drive to start with
 		
-		_currentDrive = new FileContainer("default");
-		_drives.put(_currentDrive.getName(), _currentDrive);
+		_currentLocation = new FileContainer(DEFAULT_DRIVE_NAME);
+		_drives.put(_currentLocation.getName(), _currentLocation);
 	}
 	
 	public enum OpResult {
@@ -106,13 +109,13 @@ public class FileSystemController {
 			if (fileType == FileType.TextFile) {
 				SimpleFile newFile;
 				newFile = new TextFile(fileName, path);
-				return createFileAtPath(newFile, _currentDrive, new LinkedList<String>(pathTokens));
+				return createFileAtPath(newFile, _currentLocation, new LinkedList<String>(pathTokens));
 			}
 			else {
 				try {
 					SimpleFile newFile;
 					newFile = new FileContainer(fileType, fileName, path);
-					return createFileAtPath(newFile, _currentDrive, new LinkedList<String>(pathTokens));
+					return createFileAtPath(newFile, _currentLocation, new LinkedList<String>(pathTokens));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
