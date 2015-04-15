@@ -37,7 +37,7 @@ public class FileSystemEngine {
 				result = controller.showCurrentLocationPath();
 			}
 			else if (command[0].equals("cd")) {
-				result = controller.changeLocation(command);
+				result = controller.changeDirectory(command);
 			}
 			
 			// Handle result

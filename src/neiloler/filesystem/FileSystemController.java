@@ -189,7 +189,7 @@ public class FileSystemController {
 	 * @return
 	 */
 	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
-	public OpResult changeLocation(String[] command) {
+	public OpResult changeDirectory(String[] command) {
 		
 		if (command.length != 2) {
 			return OpResult.BAD_COMMAND;
