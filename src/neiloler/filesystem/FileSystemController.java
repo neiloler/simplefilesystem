@@ -196,18 +196,33 @@ public class FileSystemController {
 		}
 		
 		List<String> pathTokens = new ArrayList<>();
-		String[] pathArray = command[1].split("/");
-		pathTokens.addAll(Arrays.asList(pathArray));
 		
-		FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
-		
-		if (targetContainer == null) {
-			return OpResult.FAILURE_PATH_NOT_FOUND;
-		}
-		else {
-			_currentLocation = targetContainer;
+		// 
+		if (command[1].equals("..")) {
+			if (_currentLocation.getParent() == null) {
+				System.out.println("Already at drive root!");
+			}
+			else {
+				_currentLocation = _currentLocation.getParent();
+			}
+			
 			return OpResult.SUCCESS;
 		}
+		else {
+			String[] pathArray = command[1].split("/");
+			pathTokens.addAll(Arrays.asList(pathArray));
+			
+			FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
+			
+			if (targetContainer == null) {
+				return OpResult.FAILURE_PATH_NOT_FOUND;
+			}
+			else {
+				_currentLocation = targetContainer;
+				return OpResult.SUCCESS;
+			}
+		}
+		
 	}
 	
 	// LOGIC
@@ -229,6 +244,8 @@ public class FileSystemController {
 			}
 			else {
 				node.addFile(fileToCreate.getName(), fileToCreate);
+				fileToCreate.setParent(node);
+				fileToCreate.setPath(node.getPath() + "/" + fileToCreate.getName());
 				return OpResult.SUCCESS;
 			}
 		}
@@ -252,6 +269,7 @@ public class FileSystemController {
 				String newFolderName = path.poll();
 				FileContainer newFolder;
 				newFolder = new FileContainer(FileType.Folder, newFolderName, node.getPath() + "/" + newFolderName);
+				newFolder.setParent(node);
 				node.getContents().put(newFolderName, newFolder);
 				return createFileAtPath(fileToCreate, newFolder, path);
 			} catch (Exception e) {
