@@ -30,7 +30,7 @@ public class FileSystemEngine {
 			else if (command[0].equals("create")) {
 				result = controller.create(command);
 			}
-			else if (command[0].equals("ls") || command[0].equals("dir")) {
+			else if ((command[0].equals("ls") || command[0].equals("dir")) && command.length == 1) {
 				result = controller.showCurrentLocationContents();
 			}
 			else if (command[0].equals("pwd")) {
@@ -64,6 +64,7 @@ public class FileSystemEngine {
 				
 				// MISC
 				case UNKNOWN_COMMNAND:
+					System.out.println("Unknown command. Try using '-h' or 'help' to learn about commands.");
 					break;
 				case BAD_COMMAND:
 					System.out.println("Incorrect use of command. Try using '-h' or 'help' to learn about commands.");
