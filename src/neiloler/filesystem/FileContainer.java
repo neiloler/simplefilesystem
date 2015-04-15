@@ -1,14 +1,15 @@
 package neiloler.filesystem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileContainer extends SimpleFile {
 
-	private List<SimpleFile> _files;
+	private Map<String, SimpleFile> _files;
 	
 	public FileContainer(FileType fileType, String fileName, String filePath) {
-		_files = new ArrayList<>();
+		_files = new HashMap<>();
 		
 		_fileType = fileType;
 		_fileName = fileName;
@@ -18,8 +19,8 @@ public class FileContainer extends SimpleFile {
 	@Override
 	double getSize() {
 		double total = 0;
-		
-		for (SimpleFile simpleFile : _files) {
+		Collection<SimpleFile> files = _files.values();
+		for (SimpleFile simpleFile : files) {
 			total += simpleFile.getSize();
 		}
 		
@@ -31,13 +32,12 @@ public class FileContainer extends SimpleFile {
 		}
 	}
 
-	@Override
-	<T> T getContents() {
-		return (T) _files;
+	public Map<String, SimpleFile> getContents() {
+		return _files;
 	}
 	
-	public void addFile(SimpleFile file) {
-		_files.add(file);
+	public void addFile(String fileName, SimpleFile file) {
+		_files.put(fileName, file);
 	}
 
 }
