@@ -42,7 +42,10 @@ public class FileSystemController {
 			"\t show current directory contents\n\n" +
 			
 			"COMMAND: pwd\n" +
-			"\t show current directory path\n\n"
+			"\t show current directory path\n\n" +
+			
+			"COMMAND: cd [path]\n" +
+			"\t path: path, delineated by / characters \n\n"
 			);
 	
 	// CONSTRUCTOR
@@ -149,11 +152,17 @@ public class FileSystemController {
 	 * @return Success, for now
 	 */
 	public OpResult showCurrentLocationContents() {
-		String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
-		for (String itemName : contents) {
-			System.out.println(itemName);
+		if (_currentLocation.getContents().isEmpty()) {
+			System.out.println("{empty}");
+			return OpResult.SUCCESS;
 		}
-		return OpResult.SUCCESS;
+		else {
+			String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
+			for (String itemName : contents) {
+				System.out.println(itemName);
+			}
+			return OpResult.SUCCESS;
+		}
 	}
 	
 	/**
@@ -162,7 +171,7 @@ public class FileSystemController {
 	 * @return Success, for now
 	 */
 	public OpResult showCurrentLocationPath() {
-		System.out.println(_currentLocation.getPath());
+		System.out.println("/" + _currentLocation.getPath());
 		return OpResult.SUCCESS;
 	}
 
@@ -175,11 +184,34 @@ public class FileSystemController {
 	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
 	public OpResult changeLocation(String[] command) {
 		
-		return null;
+		if (command.length != 2) {
+			return OpResult.BAD_COMMAND;
+		}
+		
+		List<String> pathTokens = new ArrayList<>();
+		String[] pathArray = command[1].split("/");
+		pathTokens.addAll(Arrays.asList(pathArray));
+		
+		FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
+		
+		if (targetContainer == null) {
+			return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		else {
+			_currentLocation = targetContainer;
+			return OpResult.SUCCESS;
+		}
 	}
 	
 	// LOGIC
-	
+	/**
+	 * Inserts a file at the target path, creating folders as needed.
+	 * 
+	 * @param fileToCreate File to insert in target location.
+	 * @param node The starting folder to place the path and file in.
+	 * @param path The path to put the target folder in, given node at first.
+	 * @return Operation result status.
+	 */
 	private OpResult createFileAtPath(SimpleFile fileToCreate, FileContainer node, Queue<String> path) {
 		
 		// Stop - We've reached our destination
@@ -221,5 +253,30 @@ public class FileSystemController {
 		}
 		
 		return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
+	}
+	
+	/**
+	 * Start at a given node and traverse the given path down.
+	 * 
+	 * @param node FileContainer to start at.
+	 * @param path Path to traverse.
+	 * @return FileContainer if found, null if couldn't parse.
+	 */
+	private FileContainer traversePathToEnd(FileContainer node, Queue<String> path) {
+		
+		// Stop - We've reached our destination
+		if (path.isEmpty()) {
+			return node;
+		}
+		
+		// Does this node contain the next token of the path?
+		if (node.getContents().containsKey(path.peek())) {
+			// YES - We have another FileContainer to dive into
+			return traversePathToEnd((FileContainer)node.getContents().get(path.poll()), path);
+		}
+		else {
+			// NO - We've been given an erroneous path
+			return null;
+		}
 	}
 }
