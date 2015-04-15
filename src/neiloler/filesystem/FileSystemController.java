@@ -12,14 +12,25 @@ import neiloler.filesystem.SimpleFile.FileType;
 
 public class FileSystemController {
 	
+	public enum OpResult {
+		FAILURE_PATH_NOT_FOUND,
+		FAILURE_PATH_ALREADY_EXISTS,
+		FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION,
+		FAILURE_NOT_A_TEXTFILE,
+		SUCCESS,
+		UNKNOWN_COMMNAND,
+		BAD_COMMAND
+	}
+	
+	// PRIVATE MEMBERS
+	
 	// TODO We could let the user set this up the first time the program is run/ prompt it for the first command
 	private final String DEFAULT_DRIVE_NAME = "moto";
 	
 	private Map<String, FileContainer> _drives;
 	private FileContainer _currentLocation;
 	
-	// SETUP HELPER
-	StringBuilder helpDisplay = new StringBuilder(
+	private StringBuilder helpDisplay = new StringBuilder(
 			"\n\nSimpleFileSystem Help\n" +
 			"------------------------------------------------\n" +
 			"COMMAND: create [type] [name] [path]\n" +
@@ -34,6 +45,8 @@ public class FileSystemController {
 			"\t show current directory path\n\n"
 			);
 	
+	// CONSTRUCTOR
+	
 	public FileSystemController() {
 		_drives = new HashMap<>();
 		
@@ -43,15 +56,7 @@ public class FileSystemController {
 		_drives.put(_currentLocation.getName(), _currentLocation);
 	}
 	
-	public enum OpResult {
-		FAILURE_PATH_NOT_FOUND,
-		FAILURE_PATH_ALREADY_EXISTS,
-		FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION,
-		FAILURE_NOT_A_TEXTFILE,
-		SUCCESS,
-		UNKNOWN_COMMNAND,
-		BAD_COMMAND
-	}
+	// OPERATIONS
 	
 	public void showHelp() {
 		System.out.println(helpDisplay.toString());
@@ -138,6 +143,43 @@ public class FileSystemController {
 		return RESULT;
 	}
 	
+	/**
+	 * Print current location's contents to the console.
+	 * 
+	 * @return Success, for now
+	 */
+	public OpResult showCurrentLocationContents() {
+		String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
+		for (String itemName : contents) {
+			System.out.println(itemName);
+		}
+		return OpResult.SUCCESS;
+	}
+	
+	/**
+	 * Print current location's path to the console.
+	 * 
+	 * @return Success, for now
+	 */
+	public OpResult showCurrentLocationPath() {
+		System.out.println(_currentLocation.getPath());
+		return OpResult.SUCCESS;
+	}
+
+	/**
+	 * Changes current path to the desired path.
+	 * 
+	 * @param command Raw command from engine.
+	 * @return
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
+	public OpResult changeLocation(String[] command) {
+		
+		return null;
+	}
+	
+	// LOGIC
+	
 	private OpResult createFileAtPath(SimpleFile fileToCreate, FileContainer node, Queue<String> path) {
 		
 		// Stop - We've reached our destination
@@ -179,40 +221,5 @@ public class FileSystemController {
 		}
 		
 		return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
-	}
-
-	/**
-	 * Print current location's contents to the console.
-	 * 
-	 * @return Success, for now
-	 */
-	public OpResult showCurrentLocationContents() {
-		String[] contents = (String[])_currentLocation.getContents().keySet().toArray();
-		for (String itemName : contents) {
-			System.out.println(itemName);
-		}
-		return OpResult.SUCCESS;
-	}
-	
-	/**
-	 * Print current location's path to the console.
-	 * 
-	 * @return Success, for now
-	 */
-	public OpResult showCurrentLocationPath() {
-		System.out.println(_currentLocation.getPath());
-		return OpResult.SUCCESS;
-	}
-
-	/**
-	 * Changes current path to the desired path.
-	 * 
-	 * @param command Raw command from engine.
-	 * @return
-	 */
-	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
-	public OpResult changeLocation(String[] command) {
-		
-		return null;
 	}
 }
