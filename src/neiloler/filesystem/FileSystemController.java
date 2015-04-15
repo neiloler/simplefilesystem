@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import neiloler.filesystem.FileSystemController.OpResult;
 import neiloler.filesystem.SimpleFile.FileType;
 
 public class FileSystemController {
@@ -23,10 +22,16 @@ public class FileSystemController {
 	StringBuilder helpDisplay = new StringBuilder(
 			"\n\nSimpleFileSystem Help\n" +
 			"------------------------------------------------\n" +
-			"create [type] [name] [path]\n" +
+			"COMMAND: create [type] [name] [path]\n" +
 			"\t type: drive, folder, zip, or text\n" +
 			"\t name: name of file (name cannot contain '/' characters)\n" +
-			"\t path: path, delineated by / characters (path should not exist if making new drive)\n\n"
+			"\t path: path, delineated by / characters (path should not exist if making new drive)\n\n" +
+			
+			"COMMAND: ls OR dir\n" +
+			"\t show current directory contents\n\n" +
+			
+			"COMMAND: pwd\n" +
+			"\t show current directory path\n\n"
 			);
 	
 	public FileSystemController() {
