@@ -7,7 +7,6 @@ import java.util.Map;
 public class FileContainer extends SimpleFile {
 
 	private Map<String, SimpleFile> _files;
-	private FileContainer _parent;
 	
 	/**
 	 * Create a drive object.
@@ -15,8 +14,7 @@ public class FileContainer extends SimpleFile {
 	 * @param driveName Name of drive.
 	 */
 	public FileContainer(String driveName) {
-		_parent = null;
-		
+
 		_files = new HashMap<>();
 		
 		_fileType = FileType.Drive;
@@ -27,17 +25,14 @@ public class FileContainer extends SimpleFile {
 	/**
 	 * Create a folder or zip container
 	 * 
-	 * @param parent Parent FileContainer that contains this object
-	 * @param fileType The type of file
-	 * @param fileName
-	 * @param filePath
-	 * @throws Exception If you try to pass in a FileType that doesn't make sense (Drive or TextFile), you'll blow up
+	 * @param fileType The type of folder to make, Folder or Zip.
+	 * @param fileName The name of this FileContainer.
+	 * @param filePath Full path to this FileContainer, including its own name.
+	 * @throws Exception If you try to pass in a FileType that doesn't make sense (Drive or TextFile), you'll blow up.
 	 */
 	// This is for folders and zips
-	public FileContainer(FileContainer parent, FileType fileType, String fileName, String filePath) throws Exception {
+	public FileContainer(FileType fileType, String fileName, String filePath) throws Exception {
 		_files = new HashMap<>();
-		
-		_parent = parent;
 		
 		if (fileType == FileType.Drive || fileType == FileType.TextFile) {
 			// TODO THIS IS A PROBLEM, BARK AT USER/DEV TO NOT DO THIS, CREATE CUSTOM EXCEPTION
