@@ -51,6 +51,13 @@ public class FileSystemController {
 		System.out.println(helpDisplay.toString());
 	}
 	
+	/**
+	 * Create a file with the given parameters.
+	 * 
+	 * @param command Raw command from Engine.
+	 * @return Result code of the operation
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
 	public OpResult create(String[] command) {
 		// create [type] [name] [path]
 		
