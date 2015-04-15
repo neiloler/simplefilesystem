@@ -46,7 +46,10 @@ public class FileSystemController {
 			"\t show current directory path\n\n" +
 			
 			"COMMAND: cd [path]\n" +
-			"\t path: path, delineated by / characters \n\n"
+			"\t path: path, delineated by / characters \n\n" +
+			
+			"COMMAND: exit\n" +
+			"\t Exit SimpleFileSystem \n\n"
 			);
 	
 	// CONSTRUCTOR
