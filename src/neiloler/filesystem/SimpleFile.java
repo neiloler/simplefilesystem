@@ -25,5 +25,11 @@ public abstract class SimpleFile {
 		return _filePath;
 	}
 	
+	public void setPath(String path) {
+		_filePath = path;
+	}
+	
 	abstract double getSize();
+	abstract SimpleFile getParent();
+	abstract void setParent(SimpleFile simpleFile);
 }

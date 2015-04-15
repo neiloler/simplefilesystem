@@ -7,6 +7,7 @@ import java.util.Map;
 public class FileContainer extends SimpleFile {
 
 	private Map<String, SimpleFile> _files;
+	private FileContainer _parent;
 	
 	/**
 	 * Create a drive object.
@@ -15,6 +16,7 @@ public class FileContainer extends SimpleFile {
 	 */
 	public FileContainer(String driveName) {
 
+		_parent = null;
 		_files = new HashMap<>();
 		
 		_fileType = FileType.Drive;
@@ -32,6 +34,7 @@ public class FileContainer extends SimpleFile {
 	 */
 	// This is for folders and zips
 	public FileContainer(FileType fileType, String fileName, String filePath) throws Exception {
+		
 		_files = new HashMap<>();
 		
 		if (fileType == FileType.Drive || fileType == FileType.TextFile) {
@@ -66,5 +69,17 @@ public class FileContainer extends SimpleFile {
 	
 	public void addFile(String fileName, SimpleFile file) {
 		_files.put(fileName, file);
+	}
+	
+	public FileContainer getParent() {
+		return _parent;
+	}
+	
+	public void setParent(SimpleFile parent) {
+		if (parent.getType() == FileType.TextFile) {
+			throw new RuntimeException("A text file can't contain files!");
+		}
+			
+		_parent = (FileContainer)parent;
 	}
 }

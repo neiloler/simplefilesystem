@@ -1,7 +1,10 @@
 package neiloler.filesystem;
 
+import neiloler.filesystem.SimpleFile.FileType;
+
 public class TextFile extends SimpleFile {
 
+	private FileContainer _parent;
 	private String _contents;
 	
 	public TextFile(String fileName, String filePath) {
@@ -22,6 +25,18 @@ public class TextFile extends SimpleFile {
 	
 	public void writeToFile(String newContents) {
 		_contents = newContents;
+	}
+	
+	public FileContainer getParent() {
+		return _parent;
+	}
+	
+	public void setParent(SimpleFile parent) {
+		if (parent.getType() == FileType.TextFile) {
+			throw new RuntimeException("A text file can't contain files!");
+		}
+			
+		_parent = (FileContainer)parent;
 	}
 
 }
