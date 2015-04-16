@@ -15,7 +15,7 @@ public class FileSystemEngine {
 		
 		// Simple intro
 		System.out.println("Welcome to SimpleFileSystem!\nFor a list of commands, run '-h' or 'help'.");
-		System.out.println("Default drive created: " + controller.getCurrentDirectory());
+		System.out.println("ATTN - Default drive created: " + controller.getCurrentDirectory());
 		
 		while(runEngine) {
 			System.out.print("{" + controller.getCurrentDirectory() + "}>> ");
