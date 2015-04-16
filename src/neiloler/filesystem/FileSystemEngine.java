@@ -49,6 +49,9 @@ public class FileSystemEngine {
 			else if (command[0].equals("move")) {
 				result = controller.move(command);
 			}
+			else if (command[0].equals("writeToFile") || command[0].equals("write")) {
+				result = controller.writeToFile(command);
+			}
 			
 			// Handle result
 			switch (result) {
