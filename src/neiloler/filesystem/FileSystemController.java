@@ -219,6 +219,11 @@ public class FileSystemController {
 			return OpResult.BAD_COMMAND;
 		}
 		
+		// Simple guard against moving to and from the same place
+		if (command[1].equals(command[2])) {
+			return OpResult.SUCCESS;
+		}
+		
 		// Get FROM path tokens and name
 		String[] fromTokenStrings = command[1].split("/");
 		List<String> fromPathTokens = new LinkedList<String>(Arrays.asList(fromTokenStrings));
