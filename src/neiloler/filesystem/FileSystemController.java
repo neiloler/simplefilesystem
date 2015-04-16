@@ -40,6 +40,17 @@ public class FileSystemController {
 			"\t name: name of file (name cannot contain '/' characters)\n" +
 			"\t path: path, delineated by / characters (path should not exist if making new drive)\n\n" +
 			
+			"COMMAND: move [source path] [destination path]\n" +
+			"\t source path: path of file to move (including name of file)\n" +
+			"\t destination path: path to move file to (including name of file)\n\n" +
+			
+			"COMMAND: delete [path]\n" +
+			"\t path: path of file to delete (including name of file)\n\n" +
+			
+			"COMMAND: writeToFile OR write [path] [new contents]\n" +
+			"\t path: path of file to delete (including name of file)\n" +
+			"\t new contents: new contents to write to text file (overwrites current context)\n\n" +
+			
 			"COMMAND: ls OR dir\n" +
 			"\t show current directory contents\n\n" +
 			
