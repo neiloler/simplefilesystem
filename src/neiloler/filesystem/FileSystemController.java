@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 
-import neiloler.filesystem.FileSystemController.OpResult;
 import neiloler.filesystem.SimpleFile.FileType;
 
 public class FileSystemController {
@@ -34,11 +33,11 @@ public class FileSystemController {
 	
 	private StringBuilder helpDisplay = new StringBuilder(
 			"\n\nSimpleFileSystem Help\n" +
-			"------------------------------------------------\n" +
+			"-------------------------------------------------------------------------------------------\n" +
 			"COMMAND: create [type] [name] [path]\n" +
 			"\t type: drive, folder, zip, or text\n" +
-			"\t name: name of file (name cannot contain '/' characters)\n" +
-			"\t path: path, delineated by / characters (path should not exist if making new drive)\n\n" +
+			"\t name: name of file (name cannot contain '\\' characters)\n" +
+			"\t path: path, delineated by \\ characters (path should not exist if making new drive)\n\n" +
 			
 			"COMMAND: move [source path] [destination path]\n" +
 			"\t source path: path of file to move (including name of file)\n" +
@@ -48,8 +47,11 @@ public class FileSystemController {
 			"\t path: path of file to delete (including name of file)\n\n" +
 			
 			"COMMAND: writeToFile OR write [path] [new contents]\n" +
-			"\t path: path of file to delete (including name of file)\n" +
+			"\t path: path of file to write to (including name of file)\n" +
 			"\t new contents: new contents to write to text file (overwrites current context)\n\n" +
+			
+			"COMMAND: readFromFile OR read [path]\n" +
+			"\t path: path of file to display contents of (including name of file)\n\n" +
 			
 			"COMMAND: ls OR dir\n" +
 			"\t show current directory contents\n\n" +
@@ -59,7 +61,7 @@ public class FileSystemController {
 			
 			"COMMAND: cd .. OR [path]\n" +
 			"\t ..: navigate up a directory\n" +
-			"\t path: path, delineated by / characters \n\n" +
+			"\t path: path, delineated by \\ characters \n\n" +
 			
 			"COMMAND: exit\n" +
 			"\t Exit SimpleFileSystem \n\n"
@@ -116,7 +118,7 @@ public class FileSystemController {
 			else return OpResult.UNKNOWN_COMMNAND;
 			
 			// Get NAME
-			if (command[2].contains("/")) {
+			if (command[2].contains("\\")) {
 				return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
 			}
 			else {
@@ -124,16 +126,16 @@ public class FileSystemController {
 			}
 			
 			// Get PATH
-			// TODO Do we need to protect against things like "//" (this will make a path level of "")
+			// TODO Do we need to protect against things like "\\" (this will make a path level of "")
 			if (command.length == 3) {
-				// No path, should make in current path ('./')
+				// No path, should make in current path ('.\')
 				pathTokens = new ArrayList<>();
 				path = "";
 			}
 			else {
 				path = command[3];
 				pathTokens = new ArrayList<>();
-				String[] pathArray = command[3].split("/");
+				String[] pathArray = command[3].split("\\");
 				pathTokens.addAll(Arrays.asList(pathArray));
 			}
 			
@@ -180,7 +182,7 @@ public class FileSystemController {
 			return OpResult.BAD_COMMAND;
 		}
 		
-		String[] tokenStrings = command[1].split("/");
+		String[] tokenStrings = command[1].split("\\");
 		List<String> pathTokens = new LinkedList<String>(Arrays.asList(tokenStrings));
 		
 		String nameOfFileToDelete;
@@ -225,7 +227,7 @@ public class FileSystemController {
 		}
 		
 		// Get FROM path tokens and name
-		String[] fromTokenStrings = command[1].split("/");
+		String[] fromTokenStrings = command[1].split("\\");
 		List<String> fromPathTokens = new LinkedList<String>(Arrays.asList(fromTokenStrings));
 		
 		String nameOfFileToMove;
@@ -239,7 +241,7 @@ public class FileSystemController {
 		}
 		
 		// Get TO path tokens and name
-		String[] toTokenStrings = command[2].split("/");
+		String[] toTokenStrings = command[2].split("\\");
 		List<String> toPathTokens = new LinkedList<String>(Arrays.asList(toTokenStrings));
 		
 		String nameOfDestinationFile;
@@ -287,7 +289,7 @@ public class FileSystemController {
 	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
 	public OpResult writeToFile(String[] command, String rawInputString) {
 		
-		String[] pathTokenStrings = command[1].split("/");
+		String[] pathTokenStrings = command[1].split("\\");
 		List<String> pathTokens = new LinkedList<String>(Arrays.asList(pathTokenStrings));
 		
 		String nameofTargetFile;
@@ -329,7 +331,7 @@ public class FileSystemController {
 	 */
 	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
 	public OpResult readFromFile(String[] command) {
-		String[] pathTokenStrings = command[1].split("/");
+		String[] pathTokenStrings = command[1].split("\\");
 		List<String> pathTokens = new LinkedList<String>(Arrays.asList(pathTokenStrings));
 		
 		String nameofTargetFile;
@@ -392,7 +394,7 @@ public class FileSystemController {
 	 * @return Success, for now
 	 */
 	public OpResult showCurrentLocationPath() {
-		System.out.println("/" + _currentLocation.getPath());
+		System.out.println(_currentLocation.getPath());
 		return OpResult.SUCCESS;
 	}
 
@@ -423,7 +425,7 @@ public class FileSystemController {
 			return OpResult.SUCCESS;
 		}
 		else {
-			String[] pathArray = command[1].split("/");
+			String[] pathArray = command[1].split("\\");
 			pathTokens.addAll(Arrays.asList(pathArray));
 			
 			FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
@@ -459,7 +461,7 @@ public class FileSystemController {
 			else {
 				node.addFile(fileToCreate.getName(), fileToCreate);
 				fileToCreate.setParent(node);
-				fileToCreate.setPath(node.getPath() + "/" + fileToCreate.getName());
+				fileToCreate.setPath(node.getPath() + "\\" + fileToCreate.getName());
 				return OpResult.SUCCESS;
 			}
 		}
@@ -481,7 +483,7 @@ public class FileSystemController {
 			// NO - We need to make a folder that matches this token of the path
 			String newFolderName = path.poll();
 			FileContainer newFolder;
-			newFolder = new FileContainer(FileType.Folder, newFolderName, node.getPath() + "/" + newFolderName);
+			newFolder = new FileContainer(FileType.Folder, newFolderName, node.getPath() + "\\" + newFolderName);
 			newFolder.setParent(node);
 			node.getContents().put(newFolderName, newFolder);
 			return createFileAtPath(fileToCreate, newFolder, path);
