@@ -302,7 +302,7 @@ public class FileSystemController {
 			return OpResult.FAILURE_NOT_A_TEXTFILE;
 		}
 		
-		((TextFile)targetFile).writeToFile(newContents);
+		((TextFile)targetFile).writeToFile(command[2]);
 	}
 	
 	/**
