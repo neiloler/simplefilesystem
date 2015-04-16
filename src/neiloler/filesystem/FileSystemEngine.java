@@ -53,6 +53,9 @@ public class FileSystemEngine {
 			else if (command[0].equals("writeToFile") || command[0].equals("write")) {
 				result = controller.writeToFile(command, rawInputString);
 			}
+			else if (command[0].equals("readFromFile") || command[0].equals("read")) {
+				result = controller.readFromFile(command);
+			}
 			
 			// Handle result
 			switch (result) {
