@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 
+import neiloler.filesystem.FileSystemController.OpResult;
 import neiloler.filesystem.SimpleFile.FileType;
 
 public class FileSystemController {
@@ -85,7 +86,7 @@ public class FileSystemController {
 	public OpResult create(String[] command) {
 		// create [type] [name] [path]
 		
-		OpResult RESULT = OpResult.UNKNOWN_COMMNAND;
+		OpResult RESULT = OpResult.BAD_COMMAND;
 		
 		if (command.length != 3 && command.length != 4) {
 			return OpResult.BAD_COMMAND;
@@ -150,6 +151,41 @@ public class FileSystemController {
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		return RESULT;
+	}
+	
+	/**
+	 * Delete a file with the given parameters.
+	 * 
+	 * @param command Raw command from Engine.
+	 * @return Result code of the operation
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
+	public OpResult delete(String[] command) {
+
+		OpResult RESULT = OpResult.BAD_COMMAND;
+		
+		if (command.length != 2) {
+			RESULT = OpResult.BAD_COMMAND;
+		}
+		else {
+			List<String> pathTokens = Arrays.asList(command[1].split("/"));
+			String nameOfFileToDelete = pathTokens.get(pathTokens.size() - 1);
+			pathTokens.remove(pathTokens.size() - 1);
+			
+			FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
+			
+			if (targetContainer == null) {
+				return OpResult.FAILURE_PATH_NOT_FOUND;
+			}
+			
+			if (targetContainer.getContents().remove(nameOfFileToDelete) == null) {
+					return OpResult.FAILURE_PATH_NOT_FOUND;
+			}
+			
+			RESULT = OpResult.SUCCESS;
 		}
 		
 		return RESULT;
@@ -312,5 +348,5 @@ public class FileSystemController {
 			// NO - We've been given an erroneous path
 			return null;
 		}
-	}
+	}	
 }
