@@ -33,13 +33,13 @@ public class FileContainer extends SimpleFile {
 	 * @throws Exception If you try to pass in a FileType that doesn't make sense (Drive or TextFile), you'll blow up.
 	 */
 	// This is for folders and zips
-	public FileContainer(FileType fileType, String fileName, String filePath) throws Exception {
+	public FileContainer(FileType fileType, String fileName, String filePath) {
 		
 		_files = new HashMap<>();
 		
 		if (fileType == FileType.Drive || fileType == FileType.TextFile) {
 			// TODO THIS IS A PROBLEM, BARK AT USER/DEV TO NOT DO THIS, CREATE CUSTOM EXCEPTION
-			throw new Exception("Cannot instantiate a TextFile or a Drive this way!");
+			throw new RuntimeException("Cannot instantiate a TextFile or a Drive this way!");
 		}
 		
 		_fileType = fileType;
