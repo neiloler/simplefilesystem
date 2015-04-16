@@ -309,6 +309,45 @@ public class FileSystemController {
 	}
 	
 	/**
+	 * Read from a file. Checks to make sure that we are only attempting to read from text files.
+	 * Also currently simply prints out contents of text file, nothing more.
+	 * 
+	 * @return Result code of the operation
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
+	public OpResult readFromFile(String[] command) {
+		String[] pathTokenStrings = command[1].split("/");
+		List<String> pathTokens = new LinkedList<String>(Arrays.asList(pathTokenStrings));
+		
+		String nameofTargetFile;
+		if (pathTokens.size() > 1) {
+			nameofTargetFile = new String(pathTokens.get(pathTokens.size() - 1));
+			pathTokens.remove(pathTokens.size() - 1);
+		}
+		else {
+			nameofTargetFile = pathTokens.get(0);
+			pathTokens = new ArrayList<String>();
+		}
+		
+		FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
+		
+		if (targetContainer == null) {
+			return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		
+		SimpleFile targetFile = targetContainer.getContents().get(nameofTargetFile);
+		
+		if (targetFile.getType() != FileType.TextFile) {
+			return OpResult.FAILURE_NOT_A_TEXTFILE;
+		}
+		
+		System.out.println("CONTENTS:");
+		System.out.println(((TextFile)targetFile).getContents());
+		
+		return OpResult.SUCCESS;
+	}
+	
+	/**
 	 * Print current location's contents to the console.
 	 * 
 	 * @return Success, for now
