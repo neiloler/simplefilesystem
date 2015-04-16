@@ -20,7 +20,8 @@ public class FileSystemEngine {
 		while(runEngine) {
 			System.out.print("{" + controller.getCurrentDirectory() + "}>> ");
 			
-			String[] command = input.nextLine().split(" ");
+			String rawInputString = input.nextLine();
+			String[] command = rawInputString.split(" ");
 						
 			OpResult result = OpResult.UNKNOWN_COMMNAND;
 			
@@ -50,7 +51,7 @@ public class FileSystemEngine {
 				result = controller.move(command);
 			}
 			else if (command[0].equals("writeToFile") || command[0].equals("write")) {
-				result = controller.writeToFile(command);
+				result = controller.writeToFile(command, rawInputString);
 			}
 			
 			// Handle result
