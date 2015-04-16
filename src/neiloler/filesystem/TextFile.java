@@ -1,6 +1,5 @@
 package neiloler.filesystem;
 
-import neiloler.filesystem.SimpleFile.FileType;
 
 public class TextFile extends SimpleFile {
 
