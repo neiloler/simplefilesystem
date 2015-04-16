@@ -254,14 +254,22 @@ public class FileSystemController {
 			return OpResult.FAILURE_PATH_NOT_FOUND;
 		}
 		
-		SimpleFile fileToMove = fromContainer.getContents().remove(nameOfFileToMove);
+		SimpleFile fileToMove = fromContainer.getContents().get(nameOfFileToMove);
 		if (fileToMove == null) {
 				return OpResult.FAILURE_PATH_NOT_FOUND;
 		}
 		
 		// Find target to move TO
+		OpResult result = createFileAtPath(fileToMove, _currentLocation, new LinkedList<String>(toPathTokens));
+		
+		if (result != OpResult.SUCCESS) {
+			return result;
+		}
+		
 		fileToMove.setName(nameOfDestinationFile);
-		return createFileAtPath(fileToMove, _currentLocation, new LinkedList<String>(toPathTokens));
+		fileToMove = fromContainer.getContents().remove(nameOfFileToMove);
+		
+		return OpResult.SUCCESS;
 	}
 	
 	/**
