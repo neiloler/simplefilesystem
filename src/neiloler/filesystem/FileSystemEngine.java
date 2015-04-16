@@ -46,6 +46,9 @@ public class FileSystemEngine {
 			else if (command[0].equals("delete")) {
 				result = controller.delete(command);
 			}
+			else if (command[0].equals("move")) {
+				result = controller.move(command);
+			}
 			
 			// Handle result
 			switch (result) {
