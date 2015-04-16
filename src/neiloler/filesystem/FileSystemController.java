@@ -196,6 +196,65 @@ public class FileSystemController {
 	}
 	
 	/**
+	 * Move a file with the given parameters.
+	 * 
+	 * @param command Raw command from Engine.
+	 * @return Result code of the operation
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
+	public OpResult move(String[] command) {
+		
+		if (command.length != 3) {
+			return OpResult.BAD_COMMAND;
+		}
+		
+		// Get FROM path tokens and name
+		String[] fromTokenStrings = command[1].split("/");
+		List<String> fromPathTokens = new LinkedList<String>(Arrays.asList(fromTokenStrings));
+		
+		String nameOfFileToMove;
+		if (fromPathTokens.size() > 1) {
+			nameOfFileToMove = new String(fromPathTokens.get(fromPathTokens.size() - 1));
+			fromPathTokens.remove(fromPathTokens.size() - 1);
+		}
+		else {
+			nameOfFileToMove = fromPathTokens.get(0);
+			fromPathTokens = new ArrayList<String>();
+		}
+		
+		// Get TO path tokens and name
+		String[] toTokenStrings = command[2].split("/");
+		List<String> toPathTokens = new LinkedList<String>(Arrays.asList(toTokenStrings));
+		
+		String nameOfDestinationFile;
+		if (toPathTokens.size() > 1) {
+			nameOfDestinationFile = new String(toPathTokens.get(toPathTokens.size() - 1));
+			toPathTokens.remove(toPathTokens.size() - 1);
+		}
+		else {
+			nameOfDestinationFile = toPathTokens.get(0);
+			toPathTokens = new ArrayList<String>();
+		}
+		
+		// Find target to move FROM
+		FileContainer fromContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(fromPathTokens));
+		
+		if (fromContainer == null) {
+			return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		
+		SimpleFile fileToMove = fromContainer.getContents().remove(nameOfFileToMove);
+		if (fileToMove == null) {
+				return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		
+		// Find target to move TO
+		fileToMove.setName(nameOfDestinationFile);
+		return createFileAtPath(fileToMove, _currentLocation, new LinkedList<String>(toPathTokens));
+		
+	}
+	
+	/**
 	 * Print current location's contents to the console.
 	 * 
 	 * @return Success, for now
@@ -314,19 +373,13 @@ public class FileSystemController {
 		}
 		else {
 			// NO - We need to make a folder that matches this token of the path
-			try {
-				String newFolderName = path.poll();
-				FileContainer newFolder;
-				newFolder = new FileContainer(FileType.Folder, newFolderName, node.getPath() + "/" + newFolderName);
-				newFolder.setParent(node);
-				node.getContents().put(newFolderName, newFolder);
-				return createFileAtPath(fileToCreate, newFolder, path);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			String newFolderName = path.poll();
+			FileContainer newFolder;
+			newFolder = new FileContainer(FileType.Folder, newFolderName, node.getPath() + "/" + newFolderName);
+			newFolder.setParent(node);
+			node.getContents().put(newFolderName, newFolder);
+			return createFileAtPath(fileToCreate, newFolder, path);
 		}
-		
-		return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
 	}
 	
 	/**

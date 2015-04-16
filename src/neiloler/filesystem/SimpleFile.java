@@ -21,6 +21,10 @@ public abstract class SimpleFile {
 		return _fileName;
 	}
 	
+	public void setName(String name) {
+		_fileName = name;
+	}
+	
 	public String getPath() {
 		return _filePath;
 	}
@@ -32,4 +36,6 @@ public abstract class SimpleFile {
 	abstract double getSize();
 	abstract SimpleFile getParent();
 	abstract void setParent(SimpleFile simpleFile);
+
+	
 }
