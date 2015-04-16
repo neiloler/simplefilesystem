@@ -164,31 +164,35 @@ public class FileSystemController {
 	 */
 	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
 	public OpResult delete(String[] command) {
-
-		OpResult RESULT = OpResult.BAD_COMMAND;
 		
 		if (command.length != 2) {
-			RESULT = OpResult.BAD_COMMAND;
-		}
-		else {
-			List<String> pathTokens = Arrays.asList(command[1].split("/"));
-			String nameOfFileToDelete = pathTokens.get(pathTokens.size() - 1);
-			pathTokens.remove(pathTokens.size() - 1);
-			
-			FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
-			
-			if (targetContainer == null) {
-				return OpResult.FAILURE_PATH_NOT_FOUND;
-			}
-			
-			if (targetContainer.getContents().remove(nameOfFileToDelete) == null) {
-					return OpResult.FAILURE_PATH_NOT_FOUND;
-			}
-			
-			RESULT = OpResult.SUCCESS;
+			return OpResult.BAD_COMMAND;
 		}
 		
-		return RESULT;
+		String[] tokenStrings = command[1].split("/");
+		List<String> pathTokens = new LinkedList<String>(Arrays.asList(tokenStrings));
+		
+		String nameOfFileToDelete;
+		if (pathTokens.size() > 1) {
+			nameOfFileToDelete = new String(pathTokens.get(pathTokens.size() - 1));
+			pathTokens.remove(pathTokens.size() - 1);
+		}
+		else {
+			nameOfFileToDelete = pathTokens.get(0);
+			pathTokens = new ArrayList<String>();
+		}
+		
+		FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
+		
+		if (targetContainer == null) {
+			return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		
+		if (targetContainer.getContents().remove(nameOfFileToDelete) == null) {
+				return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		
+		return OpResult.SUCCESS;
 	}
 	
 	/**
