@@ -268,14 +268,11 @@ public class FileSystemController {
 	 * Write to a file. Checks to make sure that we are only attempting to write to text files.
 	 * 
 	 * @param command Raw command from Engine.
+	 * @param rawInputString The raw string of the command passed in the engine.
 	 * @return Result code of the operation
 	 */
 	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
-	public OpResult writeToFile(String[] command) {
-		
-		if (command.length != 3) {
-			return OpResult.BAD_COMMAND;
-		}
+	public OpResult writeToFile(String[] command, String rawInputString) {
 		
 		String[] pathTokenStrings = command[1].split("/");
 		List<String> pathTokens = new LinkedList<String>(Arrays.asList(pathTokenStrings));
@@ -302,7 +299,13 @@ public class FileSystemController {
 			return OpResult.FAILURE_NOT_A_TEXTFILE;
 		}
 		
-		((TextFile)targetFile).writeToFile(command[2]);
+		// Remove first two words (separated by " "), we're assuming by now they're the commands
+		rawInputString = rawInputString.substring(rawInputString.indexOf(" ") + 1, rawInputString.length());
+		rawInputString = rawInputString.substring(rawInputString.indexOf(" ") + 1, rawInputString.length());
+		
+		((TextFile)targetFile).writeToFile(rawInputString);
+		
+		return OpResult.SUCCESS;
 	}
 	
 	/**
