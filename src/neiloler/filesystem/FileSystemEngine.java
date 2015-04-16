@@ -13,8 +13,12 @@ public class FileSystemEngine {
 		
 		FileSystemController controller = new FileSystemController();
 		
+		// Simple intro
+		System.out.println("Welcome to SimpleFileSystem!\nFor a list of commands, run '-h' or 'help'.");
+		System.out.println("Default drive created: " + controller.getCurrentDirectory());
+		
 		while(runEngine) {
-			System.out.print("Command: ");
+			System.out.print("{" + controller.getCurrentDirectory() + "}>> ");
 			
 			String[] command = input.nextLine().split(" ");
 						
@@ -22,9 +26,9 @@ public class FileSystemEngine {
 			
 			// Parse command
 			if (command[0].equals("-h") || command[0].equals("help")) {
-				controller.showHelp();
+				result = controller.showHelp();
 			}
-			if (command[0].equals("exit")) {
+			else if (command[0].equals("exit")) {
 				runEngine = false;
 			}
 			else if (command[0].equals("create")) {

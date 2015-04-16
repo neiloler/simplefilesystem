@@ -45,7 +45,8 @@ public class FileSystemController {
 			"COMMAND: pwd\n" +
 			"\t show current directory path\n\n" +
 			
-			"COMMAND: cd [path]\n" +
+			"COMMAND: cd .. OR [path]\n" +
+			"\t ..: navigate up a directory\n" +
 			"\t path: path, delineated by / characters \n\n" +
 			
 			"COMMAND: exit\n" +
@@ -65,8 +66,13 @@ public class FileSystemController {
 	
 	// OPERATIONS
 	
-	public void showHelp() {
+	public OpResult showHelp() {
 		System.out.println(helpDisplay.toString());
+		return OpResult.SUCCESS;
+	}
+	
+	public String getCurrentDirectory() {
+		return _currentLocation.getName();
 	}
 	
 	/**
