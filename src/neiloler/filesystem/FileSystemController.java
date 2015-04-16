@@ -251,7 +251,47 @@ public class FileSystemController {
 		// Find target to move TO
 		fileToMove.setName(nameOfDestinationFile);
 		return createFileAtPath(fileToMove, _currentLocation, new LinkedList<String>(toPathTokens));
+	}
+	
+	/**
+	 * Write to a file. Checks to make sure that we are only attempting to write to text files.
+	 * 
+	 * @param command Raw command from Engine.
+	 * @return Result code of the operation
+	 */
+	// TODO This should be more loosely coupled, with the engine passing in stricter contract information (fileName, filePath, etc)
+	public OpResult writeToFile(String[] command) {
 		
+		if (command.length != 3) {
+			return OpResult.BAD_COMMAND;
+		}
+		
+		String[] pathTokenStrings = command[1].split("/");
+		List<String> pathTokens = new LinkedList<String>(Arrays.asList(pathTokenStrings));
+		
+		String nameofTargetFile;
+		if (pathTokens.size() > 1) {
+			nameofTargetFile = new String(pathTokens.get(pathTokens.size() - 1));
+			pathTokens.remove(pathTokens.size() - 1);
+		}
+		else {
+			nameofTargetFile = pathTokens.get(0);
+			pathTokens = new ArrayList<String>();
+		}
+		
+		FileContainer targetContainer = traversePathToEnd(_currentLocation, new LinkedList<String>(pathTokens));
+		
+		if (targetContainer == null) {
+			return OpResult.FAILURE_PATH_NOT_FOUND;
+		}
+		
+		SimpleFile targetFile = targetContainer.getContents().get(nameofTargetFile);
+		
+		if (targetFile.getType() != FileType.TextFile) {
+			return OpResult.FAILURE_NOT_A_TEXTFILE;
+		}
+		
+		((TextFile)targetFile).writeToFile(newContents);
 	}
 	
 	/**
@@ -405,5 +445,5 @@ public class FileSystemController {
 			// NO - We've been given an erroneous path
 			return null;
 		}
-	}	
+	}
 }
