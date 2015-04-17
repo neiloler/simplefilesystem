@@ -44,6 +44,9 @@ public class FileSystemEngine {
 			else if (command[0].equals("cd")) {
 				result = controller.changeDirectory(command);
 			}
+			else if (command[0].equals("cdrive")) {
+				result = controller.changeDrive(command);
+			}
 			else if (command[0].equals("delete")) {
 				result = controller.delete(command);
 			}

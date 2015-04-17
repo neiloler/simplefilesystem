@@ -63,6 +63,9 @@ public class FileSystemController {
 			"\t ..: navigate up a directory\n" +
 			"\t path: path, delineated by \\ characters \n\n" +
 			
+			"COMMAND: cdrive [drive name]\n" +
+			"\t drive name: switch to drive {drive name}\n\n" +
+			
 			"COMMAND: exit\n" +
 			"\t Exit SimpleFileSystem \n\n"
 			);
@@ -125,6 +128,11 @@ public class FileSystemController {
 				fileName = command[2];
 			}
 			
+			// We'll catch all Drive creation requests here and assume anything afterwards is NOT a Drive request 
+			if (fileType == FileType.Drive && command.length == 2) {
+				_drives.put(fileName, new FileContainer(fileName));
+			}
+			
 			// Get PATH
 			// TODO Do we need to protect against things like "\\" (this will make a path level of "")
 			if (command.length == 3) {
@@ -142,11 +150,6 @@ public class FileSystemController {
 			// Protect against making a drive inside anything else
 			if (fileType == FileType.Drive && !path.equals("")) {
 				return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
-			}
-			
-			// We'll catch all Drive creation requests here and assume anything afterwards is NOT a Drive request 
-			if (fileType == FileType.Drive) {
-				_drives.put(fileName, new FileContainer(fileName));
 			}
 			
 			// Prep new file to be inserted in the specified place
@@ -513,5 +516,25 @@ public class FileSystemController {
 			// NO - We've been given an erroneous path
 			return null;
 		}
+	}
+
+	public OpResult changeDrive(String[] command) {
+		
+		if (command.length != 2) {
+			return OpResult.BAD_COMMAND;
+		}
+		
+		if (command[1].contains("\\")) {
+			return OpResult.FAILURE_ILLEGAL_FILE_SYSTEM_OPERATION;
+		}
+		
+		for (String driveName : _drives.keySet()) {
+			if (command[1].equals(driveName)) {
+				_currentLocation = _drives.get(driveName);
+				return OpResult.SUCCESS;
+			}
+		}
+		
+		return OpResult.FAILURE_PATH_NOT_FOUND;
 	}
 }
